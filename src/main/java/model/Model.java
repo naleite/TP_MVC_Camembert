@@ -25,4 +25,10 @@ public interface Model {
 
     public void remove(Item item);
 
+    public double getTotalValue();
+
+    public double getItemValue(int index);
+
+    public int getNbItems();
+
 }

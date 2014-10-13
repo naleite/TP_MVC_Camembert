@@ -13,7 +13,7 @@ public interface Item {
 
     public void setDescription(String description) ;
 
-    public int getValue();
+    public double getValue();
 
     public void setValue(int value);
 

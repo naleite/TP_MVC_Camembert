@@ -7,7 +7,7 @@ public class ItemImpl implements Item {
 
     private String intitule="Intitule";
     private String description="Nothing.";
-    private int value=0;
+    private double value=0.;
 
     public String getIntitule() {
         return intitule;
@@ -25,7 +25,7 @@ public class ItemImpl implements Item {
         this.description = description;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 

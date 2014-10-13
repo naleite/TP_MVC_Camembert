@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Created by naleite on 13/10/14.
  */
+
 public class ModelImpl implements Model {
 
     private String titre="Sans Titre";
@@ -75,6 +76,22 @@ public class ModelImpl implements Model {
     }
 
 
+    public double getTotalValue(){
+        double sum=0.;
+        Iterator<Item> iter=items.iterator();
+        while (iter.hasNext()){
+            sum+=iter.next().getValue();
+        }
+        return sum;
+    }
 
+    @Override
+    public double getItemValue(int index) {
+        return items.get(index).getValue();
+    }
 
+    @Override
+    public int getNbItems() {
+        return items.size();
+    }
 }

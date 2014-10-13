@@ -11,16 +11,30 @@ import java.awt.geom.Rectangle2D;
  */
 public class ViewCam extends JComponent{
 
-
+    //Graphics2D graph;
     Arc2D arc;
     Rectangle2D rect;
     Line2D line;
 
    @Override
     protected void paintComponent(Graphics g){
-        Graphics2D graph=(Graphics2D) g;
+       Graphics2D graph = (Graphics2D) g;
+
+       arc = new Arc2D.Double();
+
+       graph.setPaint(Color.BLUE);
+       graph.fill(arc);
+
 
     }
+
+
+
+
+
+
+
+
 
 
 
