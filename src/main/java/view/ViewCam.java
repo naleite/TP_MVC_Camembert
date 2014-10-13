@@ -38,6 +38,7 @@ public class ViewCam extends JComponent{
        Graphics2D graph = (Graphics2D) g;
 
 
+
         Iterator<Item> iter=m.getItemsIterator();
         System.out.println("nb items:"+m.getNbItems());
         double anglestart=0;
@@ -96,7 +97,11 @@ public class ViewCam extends JComponent{
         return colors[currentIndex];
 
 
+
     }
+
+
+
 
 
 

@@ -15,11 +15,12 @@ public class ModelImpl implements Model {
 
     private int currentItemIndex;
 
-    public ModelImpl() {
+    public ModelImpl(String titre) {
 
         items=new ArrayList<Item>();
 
         currentItemIndex=0;
+        this.titre=titre;
 
     }
 
