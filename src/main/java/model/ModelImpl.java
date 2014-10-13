@@ -45,19 +45,21 @@ public class ModelImpl implements Model {
 
     }
 
-    public Item getNextItem(){
+    @Override
+    public int getNextItemIndex(){
         currentItemIndex=((this.currentItemIndex+1) % items.size());
-        return getItem(currentItemIndex);
+        return currentItemIndex;
     }
 
-    public Item getPrevItem(){
+    @Override
+    public int getPrevItemIndex(){
         if (currentItemIndex==0){
             currentItemIndex=items.size()-1;
-            return getItem(currentItemIndex);
+            return currentItemIndex;
         }
         else{
             currentItemIndex--;
-            return getItem(currentItemIndex);
+            return currentItemIndex;
         }
 
 
@@ -93,5 +95,11 @@ public class ModelImpl implements Model {
     @Override
     public int getNbItems() {
         return items.size();
+    }
+
+
+    @Override
+    public int getCurrentIndex() {
+        return this.currentItemIndex;
     }
 }

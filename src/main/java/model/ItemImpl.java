@@ -9,6 +9,12 @@ public class ItemImpl implements Item {
     private String description="Nothing.";
     private double value=0.;
 
+    public ItemImpl(String intitule, String description, double value) {
+        this.intitule = intitule;
+        this.description = description;
+        this.value = value;
+    }
+
     public String getIntitule() {
         return intitule;
     }

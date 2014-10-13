@@ -15,9 +15,9 @@ public interface Model {
 
     public Item getCurrentItem();
 
-    public Item getNextItem();
+    public int getNextItemIndex();
 
-    public Item getPrevItem();
+    public int getPrevItemIndex();
 
     public void addItem(Item item);
 
@@ -30,5 +30,7 @@ public interface Model {
     public double getItemValue(int index);
 
     public int getNbItems();
+
+    public int getCurrentIndex();
 
 }
