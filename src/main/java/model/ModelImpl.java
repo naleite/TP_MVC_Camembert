@@ -1,17 +1,18 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import view.View;
+
+import java.util.*;
 
 /**
  * Created by naleite on 13/10/14.
  */
 
-public class ModelImpl implements Model {
+public class ModelImpl extends Observable implements Model {
 
     private String titre="Sans Titre";
     private List<Item> items;
+    //private View view;
 
     private int currentItemIndex;
 
@@ -24,14 +25,17 @@ public class ModelImpl implements Model {
 
     }
 
+    @Override
     public String getTitre() {
         return titre;
     }
 
+    @Override
     public void setTitre(String titre) {
         this.titre = titre;
     }
 
+    @Override
     public Item getItem(int index) {
         if (index >= 0 && index < items.size()) {
             return items.get(index);
@@ -41,6 +45,7 @@ public class ModelImpl implements Model {
 
     }
 
+    @Override
     public Item getCurrentItem(){
         return getItem(currentItemIndex);
 
@@ -66,19 +71,27 @@ public class ModelImpl implements Model {
 
     }
 
+    @Override
     public void addItem(Item item){
         this.items.add(item);
+        super.setChanged();
+        super.notifyObservers();
     }
 
+    @Override
     public Iterator<Item> getItemsIterator(){
         return this.items.iterator();
     }
 
+    @Override
     public void remove(Item item){
         this.items.remove(item);
+        super.setChanged();
+        super.notifyObservers();
     }
 
 
+    @Override
     public double getTotalValue(){
         double sum=0.;
         Iterator<Item> iter=items.iterator();
@@ -103,4 +116,7 @@ public class ModelImpl implements Model {
     public int getCurrentIndex() {
         return this.currentItemIndex;
     }
+
+
+
 }

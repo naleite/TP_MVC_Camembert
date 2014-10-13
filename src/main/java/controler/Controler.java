@@ -6,7 +6,7 @@ package controler;
 public interface Controler {
 
 
-    public void update();
+
     
 
 }
