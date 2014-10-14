@@ -2,6 +2,13 @@ package controler;
 
 import model.Model;
 import view.View;
+import view.ViewCam;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Arc2D;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by naleite on 13/10/14.
@@ -10,6 +17,78 @@ public class ControlerImpl implements Controler{
 
     Model m;
     View view;
+    MouseListener mouse;
+
+
+    @Override
+    public void setModel(Model m) {
+
+        this.m=m;
+    }
+
+    @Override
+    public Model getModel() {
+        return this.m;
+    }
+
+    public void addMouseListener(){
+        MouseListener mouse=new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                System.out.println("Mouse Clicked");
+                int x=e.getX();
+                int y=e.getY();
+                //int index;
+                ArrayList<Arc2D> arcs=view.getArcsList();
+                for(int i=0;i<arcs.size();i++){
+                    if(arcs.get(i).contains(x,y)){
+                        view.showItemInfo(m.getItem(i));
+                        break;
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        };
+
+        view.setMouseListener(mouse);
+
+
+    }
+
+    @Override
+    public View getView() {
+        return this.view;
+    }
+
+    @Override
+    public void setView(ViewCam v) {
+
+        this.view=v;
+    }
 
 
 

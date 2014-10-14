@@ -33,6 +33,8 @@ public class ModelImpl extends Observable implements Model {
     @Override
     public void setTitre(String titre) {
         this.titre = titre;
+        super.setChanged();
+        super.notifyObservers();
     }
 
     @Override

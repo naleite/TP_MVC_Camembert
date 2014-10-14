@@ -4,8 +4,11 @@ import model.Item;
 import model.Model;
 import model.ModelImpl;
 
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -21,12 +24,17 @@ public class ViewCam extends JComponent implements View{
     Observable o;
     java.util.List<Arc2D> arcs;
     java.util.List<Rectangle2D> rects;
+
+    JFrame frame;
     Line2D line;
+    Graphics2D graph;
     static final int X=400;
     static final int Y=400;
     static final double R=200;
     //double angle;
     Color[] colors={Color.YELLOW,Color.BLUE,Color.CYAN,Color.GREEN,Color.RED};
+
+
 
     public ViewCam(Model m) {
 
@@ -34,13 +42,19 @@ public class ViewCam extends JComponent implements View{
         this.o=(ModelImpl) m;
         o.addObserver(this);
         arcs=new ArrayList<Arc2D>();
+        frame=new JFrame();
+        frame.setBounds(0,0,800,800);
+
+        frame.add(this);
+        frame.setVisible(true);
+
 
 
     }
 
     @Override
     protected void paintComponent(Graphics g){
-       Graphics2D graph = (Graphics2D) g;
+        graph = (Graphics2D) g;
 
         createArcs(graph);
 
@@ -51,8 +65,15 @@ public class ViewCam extends JComponent implements View{
         graph.setPaint(Color.WHITE);
         graph.fill(arcblanc);
 
+        //graph.fillOval(X,Y,50,20);
+        graph.setPaint(Color.BLACK);
+        graph.setFont(Font.getFont("Arial"));
+        graph.drawString(m.getTitre(),X,Y);
 
-        System.out.println("Nb Arc:" +arcs.size());
+
+        System.out.println(m.getTitre());
+
+
 
 
 
@@ -105,6 +126,7 @@ public class ViewCam extends JComponent implements View{
 
 
 
+
             graph.setPaint(nextcolor(indexcolor));
 
             System.out.println("indexColor "+indexcolor);
@@ -117,6 +139,10 @@ public class ViewCam extends JComponent implements View{
 
             graph.fill(arc);
 
+//            graph.setPaint(Color.BLACK);
+//            graph.setFont(Font.getFont("Arial"));
+//            graph.drawString(m.getTitre(),X,Y);
+
         }
 
     }
@@ -128,5 +154,30 @@ public class ViewCam extends JComponent implements View{
     public void update(Observable o, Object arg) {
 
         this.repaint();
+    }
+
+    public MouseListener[] getMouseListener() {
+        return frame.getMouseListeners();
+    }
+
+    public void setMouseListener(MouseListener mouseListener) {
+
+        frame.addMouseListener(mouseListener);
+
+    }
+
+    public ArrayList<Arc2D> getArcsList(){
+        return (ArrayList)arcs;
+    }
+    @Override
+    public void showItemInfo(Item item) {
+        System.out.println(item.getIntitule());
+        System.out.println(item.getDescription());
+        System.out.println(item.getValue());
+    }
+
+    @Override
+    public JFrame getFrame() {
+        return this.frame;
     }
 }
