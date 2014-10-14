@@ -20,6 +20,11 @@ public class ControlerImpl implements Controler{
     MouseListener mouse;
 
 
+    public ControlerImpl(Model m, View v){
+        this.m=m;
+        this.view=v;
+        addMouseListener();
+    }
     @Override
     public void setModel(Model m) {
 
@@ -31,7 +36,7 @@ public class ControlerImpl implements Controler{
         return this.m;
     }
 
-    public void addMouseListener(){
+    private void addMouseListener(){
         MouseListener mouse=new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -40,9 +45,13 @@ public class ControlerImpl implements Controler{
                 int x=e.getX();
                 int y=e.getY();
                 //int index;
+
+
                 ArrayList<Arc2D> arcs=view.getArcsList();
+
                 for(int i=0;i<arcs.size();i++){
-                    if(arcs.get(i).contains(x,y)){
+                    if(arcs.get(i).contains(x,y) && !view.getArcBlanc().contains(x,y)
+                            && !view.getArcCentre().contains(x,y)){
                         view.showItemInfo(m.getItem(i));
                         break;
 

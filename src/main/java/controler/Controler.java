@@ -12,7 +12,6 @@ public interface Controler {
 
     public void setModel(Model m);
     public Model getModel();
-    public void addMouseListener();
     public View getView();
     public void setView(ViewCam v);
 

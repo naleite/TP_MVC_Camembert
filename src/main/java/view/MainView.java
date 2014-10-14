@@ -21,10 +21,8 @@ public class MainView {
 
         Model m=new ModelImpl("HELLO");
         View viewCam=new ViewCam(m);
-        Controler controler=new ControlerImpl();
-        controler.setModel(m);
-        controler.setView((ViewCam)viewCam);
-        controler.addMouseListener();
+        Controler controler=new ControlerImpl(m,viewCam);
+
 
 //        JFrame frame=new JFrame();
 //        frame.setBounds(0,0,800,800);

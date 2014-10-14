@@ -23,4 +23,8 @@ public interface View extends Observer{
     public ArrayList<Arc2D> getArcsList();
 
     public JFrame getFrame();
+
+    public Arc2D getArcBlanc();
+
+    public Arc2D getArcCentre();
 }

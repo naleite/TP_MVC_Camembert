@@ -28,11 +28,13 @@ public class ViewCam extends JComponent implements View{
     JFrame frame;
     Line2D line;
     Graphics2D graph;
-    static final int X=400;
-    static final int Y=400;
+     int X=400;
+     int Y=400;
     static final double R=200;
     //double angle;
     Color[] colors={Color.YELLOW,Color.BLUE,Color.CYAN,Color.GREEN,Color.RED};
+
+    Arc2D arcblanc,arccentre;
 
 
 
@@ -48,6 +50,9 @@ public class ViewCam extends JComponent implements View{
         frame.add(this);
         frame.setVisible(true);
 
+        X=getWidth()/2;
+        Y=getHeight()/2;
+
 
 
     }
@@ -58,20 +63,35 @@ public class ViewCam extends JComponent implements View{
 
         createArcs(graph);
 
-        Arc2D.Double arcblanc=new Arc2D.Double();
+         arcblanc=new Arc2D.Double();
 
-        arcblanc.setArcByCenter(X,Y,R/2,0,360,Arc2D.PIE);
+        arcblanc.setArcByCenter(X,Y,R*2/3,0,360,Arc2D.PIE);
 
         graph.setPaint(Color.WHITE);
         graph.fill(arcblanc);
 
+         arccentre=new Arc2D.Double();
+
+        arccentre.setArcByCenter(X,Y,R/2,0,360,Arc2D.PIE);
+
+        graph.setPaint(Color.MAGENTA);
+        graph.fill(arccentre);
+
+
         //graph.fillOval(X,Y,50,20);
         graph.setPaint(Color.BLACK);
-        graph.setFont(Font.getFont("Arial"));
-        graph.drawString(m.getTitre(),X,Y);
+        graph.setFont(new Font("Arial",Font.BOLD,20));
+        String title=m.getTitre();
+        FontMetrics fm = g.getFontMetrics();
+        int stringWidth = fm.stringWidth(title);
+        int stringAscent = fm.getAscent();
+        int xCoordinate = getWidth()/2 - stringWidth/2;
+        int yCoordinate = getHeight()/2 +stringAscent/2;
+
+        graph.drawString(title,xCoordinate,yCoordinate);
 
 
-        System.out.println(m.getTitre());
+        //System.out.println(m.getTitre());
 
 
 
@@ -91,17 +111,9 @@ public class ViewCam extends JComponent implements View{
 
     }
 
-    public void setRect(){
-
-        Iterator<Item> iter=m.getItemsIterator();
-        while (iter.hasNext()){
-            String decl=iter.next().getDescription();
-            Rectangle2D rect=new Rectangle2D.Double();
-
-        }
 
 
-    }
+
 
     private void createArcs(Graphics2D graph){
 
@@ -124,15 +136,11 @@ public class ViewCam extends JComponent implements View{
             arc.setArcByCenter(X,Y,R,anglestart,angle,Arc2D.PIE);
             arcs.add(arc);
 
-
-
-
             graph.setPaint(nextcolor(indexcolor));
 
             System.out.println("indexColor "+indexcolor);
             indexcolor++;
 
-            // graph.fill(arc);
 
             anglestart=anglestop;
 
@@ -142,6 +150,7 @@ public class ViewCam extends JComponent implements View{
 //            graph.setPaint(Color.BLACK);
 //            graph.setFont(Font.getFont("Arial"));
 //            graph.drawString(m.getTitre(),X,Y);
+
 
         }
 
@@ -174,10 +183,42 @@ public class ViewCam extends JComponent implements View{
         System.out.println(item.getIntitule());
         System.out.println(item.getDescription());
         System.out.println(item.getValue());
+
+        //Draw REct pas reussir
+        Point p=this.getMousePosition();
+
+        Rectangle2D popup=new Rectangle2D.Double();
+        popup.setRect(X,Y,100,50);
+
+
+        graph.setPaintMode();
+        graph.setPaint(Color.GREEN);
+        graph.drawRect(X+200,Y+200,100,50);
+        System.out.println(popup.toString());
+
     }
 
-    @Override
+    public void setRect(Point p){
+
+
+
+        }
+
+
+        @Override
     public JFrame getFrame() {
         return this.frame;
     }
+
+    @Override
+    public Arc2D getArcBlanc() {
+        return this.arcblanc;
+    }
+
+    @Override
+    public Arc2D getArcCentre() {
+        return this.arccentre;
+    }
+
+
 }
