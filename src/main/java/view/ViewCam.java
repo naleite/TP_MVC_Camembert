@@ -52,7 +52,7 @@ public class ViewCam extends JComponent implements View{
         graph.fill(arcblanc);
 
 
-
+        System.out.println("Nb Arc:" +arcs.size());
 
 
 
@@ -84,6 +84,7 @@ public class ViewCam extends JComponent implements View{
 
     private void createArcs(Graphics2D graph){
 
+        arcs.clear();
         Iterator<Item> iter=m.getItemsIterator();
         System.out.println("nb items:"+m.getNbItems());
         double anglestart=0;

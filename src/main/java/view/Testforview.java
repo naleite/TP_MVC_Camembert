@@ -29,7 +29,7 @@ public class Testforview {
             Item it=new ItemImpl("HHH","HHKKHKHKL",new Random().nextDouble()*20);
             m.addItem(it);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -39,7 +39,7 @@ public class Testforview {
 
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,16 @@ public class Testforview {
         m.addItem(it3);
         m.addItem(it4);
 
-        //viewCam.redraw();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        m.remove(it1);
+        m.remove(it2);
+
+
 
 
 
