@@ -4,15 +4,15 @@ import model.Item;
 import model.Model;
 import model.ModelImpl;
 
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Observable;
 
 /**
  * Created by naleite on 13/10/14.
@@ -36,6 +36,11 @@ public class ViewCam extends JComponent implements View{
 
     Arc2D arcblanc,arccentre;
 
+    Button btnNext;
+    Button btnPrev;
+
+
+
 
 
     public ViewCam(Model m) {
@@ -45,10 +50,23 @@ public class ViewCam extends JComponent implements View{
         o.addObserver(this);
         arcs=new ArrayList<Arc2D>();
         frame=new JFrame();
+        btnNext=new Button("Next");
+        btnPrev=new Button("Previous");
         frame.setBounds(0,0,800,800);
 
+        btnNext.setBounds(10,20,70,25);
+        btnPrev.setBounds(90,20,70,25);
+        btnNext.setEnabled(true);
+        btnNext.setVisible(true);
+        btnPrev.setVisible(true);
+        btnPrev.setEnabled(true);
+        frame.add(btnPrev);
+        frame.add(btnNext);
         frame.add(this);
+
         frame.setVisible(true);
+
+
 
         X=getWidth()/2;
         Y=getHeight()/2;
@@ -59,6 +77,8 @@ public class ViewCam extends JComponent implements View{
 
     @Override
     protected void paintComponent(Graphics g){
+
+
         graph = (Graphics2D) g;
 
         createArcs(graph);
@@ -221,4 +241,21 @@ public class ViewCam extends JComponent implements View{
     }
 
 
+    public void setBtnNext(Button btnNext) {
+        this.btnNext = btnNext;
+    }
+
+    public void setBtnPrev(Button btnPrev) {
+        this.btnPrev = btnPrev;
+    }
+
+    @Override
+    public Button getBtnNext() {
+        return btnNext;
+    }
+
+    @Override
+    public Button getBtnPrev() {
+        return btnPrev;
+    }
 }

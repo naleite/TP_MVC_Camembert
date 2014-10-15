@@ -4,11 +4,12 @@ import model.Model;
 import view.View;
 import view.ViewCam;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by naleite on 13/10/14.
@@ -24,6 +25,7 @@ public class ControlerImpl implements Controler{
         this.m=m;
         this.view=v;
         addMouseListener();
+        addButtonListener();
     }
     @Override
     public void setModel(Model m) {
@@ -98,6 +100,28 @@ public class ControlerImpl implements Controler{
     public void setView(ViewCam v) {
 
         this.view=v;
+    }
+
+    public void addButtonListener(){
+
+        ActionListener actionNext=new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.showItemInfo(m.getNextItem());
+            }
+        };
+
+        ActionListener actionPrev=new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.showItemInfo(m.getPrevItem());
+            }
+        };
+
+        view.getBtnNext().addActionListener(actionNext);
+        view.getBtnPrev().addActionListener(actionPrev);
+
+
     }
 
 
