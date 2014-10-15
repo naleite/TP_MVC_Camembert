@@ -7,6 +7,7 @@ import model.ModelImpl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -39,7 +40,8 @@ public class ViewCam extends JComponent implements View{
     Button btnNext;
     Button btnPrev;
 
-
+    double widthRect=200;
+    double heightRect=150;
 
 
 
@@ -54,8 +56,8 @@ public class ViewCam extends JComponent implements View{
         btnPrev=new Button("Previous");
         frame.setBounds(0,0,800,800);
 
-        btnNext.setBounds(10,20,70,25);
-        btnPrev.setBounds(90,20,70,25);
+        btnNext.setBounds(120,20,100,30);
+        btnPrev.setBounds(10,20,100,30);
         btnNext.setEnabled(true);
         btnNext.setVisible(true);
         btnPrev.setVisible(true);
@@ -65,8 +67,7 @@ public class ViewCam extends JComponent implements View{
         frame.add(this);
 
         frame.setVisible(true);
-
-
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         X=getWidth()/2;
         Y=getHeight()/2;
@@ -109,13 +110,6 @@ public class ViewCam extends JComponent implements View{
         int yCoordinate = getHeight()/2 +stringAscent/2;
 
         graph.drawString(title,xCoordinate,yCoordinate);
-
-
-        //System.out.println(m.getTitre());
-
-
-
-
 
     }
 
@@ -167,9 +161,6 @@ public class ViewCam extends JComponent implements View{
 
             graph.fill(arc);
 
-//            graph.setPaint(Color.BLACK);
-//            graph.setFont(Font.getFont("Arial"));
-//            graph.drawString(m.getTitre(),X,Y);
 
 
         }
@@ -218,11 +209,11 @@ public class ViewCam extends JComponent implements View{
 
     }
 
-    public void setRect(Point p){
+    public void setRect(Arc2D arc){
+        //double x=arc.get
 
 
-
-        }
+    }
 
 
         @Override
@@ -258,4 +249,11 @@ public class ViewCam extends JComponent implements View{
     public Button getBtnPrev() {
         return btnPrev;
     }
+
+    @Override
+    public Graphics2D getGraphics(){
+        return this.graph;
+    }
+
+
 }

@@ -33,4 +33,6 @@ public interface View extends Observer{
 
     public Button getBtnNext();
     public Button getBtnPrev();
+    public Graphics2D getGraphics();
+
 }

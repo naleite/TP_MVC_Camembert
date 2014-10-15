@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 
@@ -19,13 +20,14 @@ public class ControlerImpl implements Controler{
     Model m;
     View view;
     MouseListener mouse;
-
+    AffineTransform rot=new AffineTransform();
 
     public ControlerImpl(Model m, View v){
         this.m=m;
         this.view=v;
         addMouseListener();
         addButtonListener();
+
     }
     @Override
     public void setModel(Model m) {
@@ -55,6 +57,16 @@ public class ControlerImpl implements Controler{
                     if(arcs.get(i).contains(x,y) && !view.getArcBlanc().contains(x,y)
                             && !view.getArcCentre().contains(x,y)){
                         m.setIndexAsCurrent(i);
+
+
+                        double anst=arcs.get(i).getAngleStart();
+                        double anex=arcs.get(i).getAngleExtent();
+                        //System.out.println(arcs.get(i).getAngleStart()+"   "+arcs.get(i).getAngleExtent());
+                        //double xr=arcs.get(i).getCenterX()+200*Math.cos((anex+anst)/360);
+                        //double yr=arcs.get(i).getCenterY()+200*Math.sin((anex+anst)/360);
+                        //System.out.println(xr+" zuobiao "+yr+"   "+Math.cos(90/360));
+
+
                         view.showItemInfo(m.getCurrentItem());
                         break;
 
@@ -107,7 +119,11 @@ public class ControlerImpl implements Controler{
         ActionListener actionNext=new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+
                 view.showItemInfo(m.getNextItem());
+
+
             }
         };
 
@@ -115,6 +131,9 @@ public class ControlerImpl implements Controler{
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.showItemInfo(m.getPrevItem());
+
+
+
             }
         };
 
@@ -123,6 +142,8 @@ public class ControlerImpl implements Controler{
 
 
     }
+
+
 
 
 
