@@ -79,7 +79,6 @@ public class ViewCam extends JComponent implements View{
     @Override
     protected void paintComponent(Graphics g){
 
-
         graph = (Graphics2D) g;
 
         createArcs(graph);
@@ -110,6 +109,10 @@ public class ViewCam extends JComponent implements View{
         int yCoordinate = getHeight()/2 +stringAscent/2;
 
         graph.drawString(title,xCoordinate,yCoordinate);
+
+
+        setRect(graph);
+
 
     }
 
@@ -202,15 +205,17 @@ public class ViewCam extends JComponent implements View{
         popup.setRect(X,Y,100,50);
 
 
-        graph.setPaintMode();
-        graph.setPaint(Color.GREEN);
-        graph.drawRect(X+200,Y+200,100,50);
-        //System.out.println(popup.toString());
+        setRect(graph);
+        System.out.println(graph.getPaint());
 
     }
 
-    public void setRect(Arc2D arc){
+    public void setRect(Graphics2D graph){
         //double x=arc.get
+
+        graph.setPaint(Color.GREEN);
+        graph.drawRect(X+200,Y+200,150,80);
+
 
 
     }
