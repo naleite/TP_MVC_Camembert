@@ -52,7 +52,8 @@ public class ControlerImpl implements Controler{
                 for(int i=0;i<arcs.size();i++){
                     if(arcs.get(i).contains(x,y) && !view.getArcBlanc().contains(x,y)
                             && !view.getArcCentre().contains(x,y)){
-                        view.showItemInfo(m.getItem(i));
+                        m.setIndexAsCurrent(i);
+                        view.showItemInfo(m.getCurrentItem());
                         break;
 
                     }

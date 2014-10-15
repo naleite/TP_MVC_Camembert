@@ -54,20 +54,20 @@ public class ModelImpl extends Observable implements Model {
     }
 
     @Override
-    public int getNextItemIndex(){
+    public Item getNextItem(){
         currentItemIndex=((this.currentItemIndex+1) % items.size());
-        return currentItemIndex;
+        return getItem(currentItemIndex);
     }
 
     @Override
-    public int getPrevItemIndex(){
+    public Item getPrevItem(){
         if (currentItemIndex==0){
             currentItemIndex=items.size()-1;
-            return currentItemIndex;
+            return getItem(currentItemIndex);
         }
         else{
             currentItemIndex--;
-            return currentItemIndex;
+            return getItem(currentItemIndex);
         }
 
 
@@ -120,5 +120,13 @@ public class ModelImpl extends Observable implements Model {
     }
 
 
-
+    @Override
+    public void setIndexAsCurrent(int index) {
+        if(index>=0 && index<items.size()){
+            currentItemIndex=index;
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Can not set this index.");
+        }
+    }
 }

@@ -16,9 +16,9 @@ public interface Model {
 
     public Item getCurrentItem();
 
-    public int getNextItemIndex();
+    public Item getNextItem();
 
-    public int getPrevItemIndex();
+    public Item getPrevItem();
 
     public void addItem(Item item);
 
@@ -34,4 +34,5 @@ public interface Model {
 
     public int getCurrentIndex();
 
+    public void setIndexAsCurrent(int index);
 }

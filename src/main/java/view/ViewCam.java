@@ -194,7 +194,7 @@ public class ViewCam extends JComponent implements View{
         graph.setPaintMode();
         graph.setPaint(Color.GREEN);
         graph.drawRect(X+200,Y+200,100,50);
-        System.out.println(popup.toString());
+        //System.out.println(popup.toString());
 
     }
 
