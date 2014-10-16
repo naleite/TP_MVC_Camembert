@@ -57,17 +57,18 @@ public class ControlerImpl implements Controler{
                     if(arcs.get(i).contains(x,y) && !view.getArcBlanc().contains(x,y)
                             && !view.getArcCentre().contains(x,y)){
                         m.setIndexAsCurrent(i);
-
-
+                        view.setArcCurrent(arcs.get(i));
                         double anst=arcs.get(i).getAngleStart();
                         double anex=arcs.get(i).getAngleExtent();
                         //System.out.println(arcs.get(i).getAngleStart()+"   "+arcs.get(i).getAngleExtent());
                         //double xr=arcs.get(i).getCenterX()+200*Math.cos((anex+anst)/360);
                         //double yr=arcs.get(i).getCenterY()+200*Math.sin((anex+anst)/360);
                         //System.out.println(xr+" zuobiao "+yr+"   "+Math.cos(90/360));
+                        view.getRectShowList().add(view.getRects().get(i));
 
 
-                        view.showItemInfo(m.getCurrentItem());
+                        view.showItemInfo(m.getCurrentIndex());
+                        //view.update(m,m);
                         break;
 
                     }
@@ -121,8 +122,12 @@ public class ControlerImpl implements Controler{
             public void actionPerformed(ActionEvent e) {
 
 
-                view.showItemInfo(m.getNextItem());
+                m.getNextItem();
 
+                view.setArcCurrent(view.getArcsList().get(m.getCurrentIndex()));
+                view.getRectShowList().add(view.getRects().get(m.getCurrentIndex()));
+                //view.repaint();
+                view.showItemInfo(m.getCurrentIndex());
 
             }
         };
@@ -130,8 +135,13 @@ public class ControlerImpl implements Controler{
         ActionListener actionPrev=new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.showItemInfo(m.getPrevItem());
+                m.getPrevItem();
 
+                view.setArcCurrent(view.getArcsList().get(m.getCurrentIndex()));
+                view.getRectShowList().add(view.getRects().get(m.getCurrentIndex()));
+                //view.repaint();
+
+                view.showItemInfo(m.getCurrentIndex());
 
 
             }

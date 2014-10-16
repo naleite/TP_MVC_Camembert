@@ -55,10 +55,12 @@ public class MainView {
         Item it2=new ItemImpl("2","Item2",80);
         Item it3=new ItemImpl("3","Item3",100);
         Item it4=new ItemImpl("4","Item4",120);
+        Item it5=new ItemImpl("5","Item4",180);
         m.addItem(it1);
         m.addItem(it2);
         m.addItem(it3);
         m.addItem(it4);
+        m.addItem(it5);
 
 
 

@@ -11,9 +11,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by naleite on 13/10/14.
@@ -26,22 +25,24 @@ public class ViewCam extends JComponent implements View{
     java.util.List<Arc2D> arcs;
     java.util.List<Rectangle2D> rects;
 
+    java.util.List<String> stringstoDraws;
     JFrame frame;
     Line2D line;
     Graphics2D graph;
-     int X=400;
-     int Y=400;
+     double X=400;
+     double Y=400;
     static final double R=200;
     //double angle;
     Color[] colors={Color.YELLOW,Color.BLUE,Color.CYAN,Color.GREEN,Color.RED};
 
-    Arc2D arcblanc,arccentre;
+    Arc2D arcblanc,arccentre,arcCurrent;
+    java.util.List<Rectangle2D> rectShowList;
 
     Button btnNext;
     Button btnPrev;
 
-    double widthRect=200;
-    double heightRect=150;
+    double widthRect=150;
+    double heightRect=100;
 
 
 
@@ -51,6 +52,10 @@ public class ViewCam extends JComponent implements View{
         this.o=(ModelImpl) m;
         o.addObserver(this);
         arcs=new ArrayList<Arc2D>();
+        rects=new ArrayList<Rectangle2D>();
+        rectShowList=new ArrayList<>();
+        stringstoDraws=new ArrayList<>();
+
         frame=new JFrame();
         btnNext=new Button("Next");
         btnPrev=new Button("Previous");
@@ -82,8 +87,9 @@ public class ViewCam extends JComponent implements View{
         graph = (Graphics2D) g;
 
         createArcs(graph);
+        drawRectList(graph);
 
-         arcblanc=new Arc2D.Double();
+        arcblanc=new Arc2D.Double();
 
         arcblanc.setArcByCenter(X,Y,R*2/3,0,360,Arc2D.PIE);
 
@@ -109,13 +115,23 @@ public class ViewCam extends JComponent implements View{
         int yCoordinate = getHeight()/2 +stringAscent/2;
 
         graph.drawString(title,xCoordinate,yCoordinate);
+        graph.drawString(( m.getTotalValue())+" Euros",xCoordinate,yCoordinate+30);
 
-
-        setRect(graph);
+        graph.setPaint(Color.BLACK);
+        //drawStrings(graph);
 
 
     }
 
+    private void drawStrings(Rectangle2D rect, int index) {
+        double x=rect.getX();
+        double y=rect.getY();
+        graph.setPaint(Color.BLACK);
+        String s=stringstoDraws.get(index);
+        graph.drawString(s,(int)(x+widthRect/3),(int)(y+heightRect/3));
+        graph.setPaint(Color.MAGENTA);
+
+    }
 
 
     private Color nextcolor(int currentIndex){
@@ -164,7 +180,9 @@ public class ViewCam extends JComponent implements View{
 
             graph.fill(arc);
 
-
+            //create rects
+            Rectangle2D rect=createRect(arc);
+            rects.add(rect);
 
         }
 
@@ -192,33 +210,32 @@ public class ViewCam extends JComponent implements View{
     public ArrayList<Arc2D> getArcsList(){
         return (ArrayList)arcs;
     }
+
+
     @Override
-    public void showItemInfo(Item item) {
+    public void showItemInfo(int index) {
+        Item item=m.getItem(index);
         System.out.println(item.getIntitule());
         System.out.println(item.getDescription());
         System.out.println(item.getValue());
 
-        //Draw REct pas reussir
-        Point p=this.getMousePosition();
-
-        Rectangle2D popup=new Rectangle2D.Double();
-        popup.setRect(X,Y,100,50);
+        String intitule=item.getIntitule();
+        String decl=item.getDescription();
+        double value=item.getValue();
 
 
-        setRect(graph);
-        System.out.println(graph.getPaint());
 
-    }
+        String toDraw=intitule+"\n"+decl+"\n"+value;
 
-    public void setRect(Graphics2D graph){
-        //double x=arc.get
+        stringstoDraws.add(toDraw);
 
-        graph.setPaint(Color.GREEN);
-        graph.drawRect(X+200,Y+200,150,80);
-
+        //graph.drawString(toDraw,(int) x,(int)y+10);
+        //rectShowList.add(rects.get(index));
+        repaint();
 
 
     }
+
 
 
         @Override
@@ -260,5 +277,80 @@ public class ViewCam extends JComponent implements View{
         return this.graph;
     }
 
+    @Override
+    public Arc2D getArcCurrent() {
+        return arcCurrent;
+    }
 
+    @Override
+    public void setArcCurrent(Arc2D arcCurrent) {
+        this.arcCurrent = arcCurrent;
+    }
+
+    public int transformPosition(double angle){
+
+        if(0<=angle && angle<=90) {
+            return 1;
+        }
+        else if(angle>90 && angle<=180){
+            return 2;
+        }
+        else if(angle>180 && angle<=270){
+            return 3;
+        }
+        else if(angle >270 && angle <=361){
+            return 4;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    public Rectangle2D createRect(Arc2D arc){
+        Rectangle2D rect=new Rectangle2D.Double();
+        double anglestart=arc.getAngleStart();
+        double angle=arc.getAngleExtent();
+        double angleRect=anglestart+angle/2;
+        double xr=arc.getCenterX()+R*Math.cos(angleRect/180*3.14);
+        double yr=arc.getCenterY()-R*Math.sin(angleRect/180*3.14);
+
+        switch (transformPosition(angleRect)){
+            case 1: yr=yr-heightRect;break;
+            case 2: yr=yr-heightRect;xr=xr-widthRect;break;
+            case 3: xr=xr-widthRect;break;
+            case 4: break;
+            default:break;
+        }
+        rect.setRect(xr,yr,widthRect,heightRect);
+        //graph.drawRect((int) xr, (int) yr, (int) widthRect, (int) heightRect);
+
+
+        //System.out.println(xr+" zuobiao "+yr+"   ");
+
+        return rect;
+
+    }
+
+    private void drawRectList(Graphics2D graph){
+        Iterator<Rectangle2D> iter=rectShowList.iterator();
+        while(iter.hasNext()){
+            Rectangle2D rect=iter.next();
+            int index=rectShowList.indexOf(rect);
+
+            drawStrings(rect,index);
+            //graph.setPaint(Color.BLACK);
+            graph.draw(rect);
+
+        }
+
+    }
+
+
+    public List<Rectangle2D> getRectShowList() {
+        return rectShowList;
+    }
+
+    public List<Rectangle2D> getRects() {
+        return rects;
+    }
 }

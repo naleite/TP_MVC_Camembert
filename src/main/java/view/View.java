@@ -6,8 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
-import java.util.ArrayList;
-import java.util.Observer;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by naleite on 14-10-13.
@@ -18,7 +19,7 @@ public interface View extends Observer{
 
     public void setMouseListener(MouseListener mouseListener);
 
-    void showItemInfo(Item item);
+    void showItemInfo(int index);
 
     public ArrayList<Arc2D> getArcsList();
 
@@ -35,4 +36,12 @@ public interface View extends Observer{
     public Button getBtnPrev();
     public Graphics2D getGraphics();
 
+
+    Arc2D getArcCurrent();
+
+    void setArcCurrent(Arc2D arcCurrent);
+
+    public java.util.List<Rectangle2D> getRectShowList();
+
+    public List<Rectangle2D> getRects();
 }
