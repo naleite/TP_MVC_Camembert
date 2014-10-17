@@ -7,12 +7,13 @@ import model.ModelImpl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by naleite on 13/10/14.
@@ -128,7 +129,10 @@ public class ViewCam extends JComponent implements View{
         double y=rect.getY();
         graph.setPaint(Color.BLACK);
         String s=stringstoDraws.get(index);
-        graph.drawString(s,(int)(x+widthRect/3),(int)(y+heightRect/3));
+        String[] strings=s.split("\n");
+        for(int i=0;i<strings.length;i++) {
+            graph.drawString(strings[i],(int) (x + widthRect / 3), (int) (y + heightRect / 3+i*20));
+        }
         graph.setPaint(Color.MAGENTA);
 
     }
