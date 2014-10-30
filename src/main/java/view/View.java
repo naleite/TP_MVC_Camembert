@@ -1,14 +1,13 @@
 package view;
 
-import model.Item;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 /**
  * Created by naleite on 14-10-13.
@@ -37,11 +36,13 @@ public interface View extends Observer{
     public Graphics2D getGraphics();
 
 
-    Arc2D getArcCurrent();
 
-    void setArcCurrent(Arc2D arcCurrent);
+
+
 
     public java.util.List<Rectangle2D> getRectShowList();
 
     public List<Rectangle2D> getRects();
+
+    public void setCurrentAcrIndex(int currentAcr);
 }

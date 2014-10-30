@@ -25,8 +25,8 @@ public class ViewCam extends JComponent implements View{
     Observable o;
     java.util.List<Arc2D> arcs;
     java.util.List<Rectangle2D> rects;
-
     java.util.List<String> stringstoDraws;
+
     JFrame frame;
     Line2D line;
     Graphics2D graph;
@@ -45,13 +45,19 @@ public class ViewCam extends JComponent implements View{
     double widthRect=150;
     double heightRect=100;
 
+    int currentAcr=-1;
 
+    @Override
+    public void setCurrentAcrIndex(int currentAcr) {
+        this.currentAcr = currentAcr;
+    }
 
     public ViewCam(Model m) {
 
         this.m=m;
         this.o=(ModelImpl) m;
         o.addObserver(this);
+        arcCurrent=null;
         arcs=new ArrayList<Arc2D>();
         rects=new ArrayList<Rectangle2D>();
         rectShowList=new ArrayList<>();
@@ -148,10 +154,6 @@ public class ViewCam extends JComponent implements View{
 
     }
 
-
-
-
-
     private void createArcs(Graphics2D graph){
 
         arcs.clear();
@@ -160,6 +162,7 @@ public class ViewCam extends JComponent implements View{
         double anglestart=0;
         int indexcolor=0;
         double anglestop=0;
+        int num=0;
         while (iter.hasNext()){
             Arc2D arc = new Arc2D.Double();
 
@@ -167,12 +170,15 @@ public class ViewCam extends JComponent implements View{
 
             anglestop=anglestart+angle;
 
-            System.out.println("Anglestart: "+anglestart);
-            System.out.println("Anglestop: "+anglestop);
-
-            arc.setArcByCenter(X,Y,R,anglestart,angle,Arc2D.PIE);
-            arcs.add(arc);
-
+            if(num==this.currentAcr){
+                arc.setArcByCenter(X,Y,R+20,anglestart,angle,Arc2D.PIE);
+                arcs.add(arc);
+            }
+            else {
+                arc.setArcByCenter(X,Y,R,anglestart,angle,Arc2D.PIE);
+                arcs.add(arc);
+            }
+            num++;
             graph.setPaint(nextcolor(indexcolor));
 
             System.out.println("indexColor "+indexcolor);
@@ -191,11 +197,7 @@ public class ViewCam extends JComponent implements View{
         }
 
     }
-
-
-
-
-    @Override
+  @Override
     public void update(Observable o, Object arg) {
 
         this.repaint();
@@ -281,15 +283,8 @@ public class ViewCam extends JComponent implements View{
         return this.graph;
     }
 
-    @Override
-    public Arc2D getArcCurrent() {
-        return arcCurrent;
-    }
 
-    @Override
-    public void setArcCurrent(Arc2D arcCurrent) {
-        this.arcCurrent = arcCurrent;
-    }
+
 
     public int transformPosition(double angle){
 
@@ -311,12 +306,13 @@ public class ViewCam extends JComponent implements View{
     }
 
     public Rectangle2D createRect(Arc2D arc){
+        double r=arc.getWidth()/2;
         Rectangle2D rect=new Rectangle2D.Double();
         double anglestart=arc.getAngleStart();
         double angle=arc.getAngleExtent();
         double angleRect=anglestart+angle/2;
-        double xr=arc.getCenterX()+R*Math.cos(angleRect/180*3.14);
-        double yr=arc.getCenterY()-R*Math.sin(angleRect/180*3.14);
+        double xr=arc.getCenterX()+r*Math.cos(angleRect/180*3.14);
+        double yr=arc.getCenterY()-r*Math.sin(angleRect/180*3.14);
 
         switch (transformPosition(angleRect)){
             case 1: yr=yr-heightRect;break;
@@ -357,4 +353,8 @@ public class ViewCam extends JComponent implements View{
     public List<Rectangle2D> getRects() {
         return rects;
     }
+
+
+
+
 }
