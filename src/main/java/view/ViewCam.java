@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,21 +22,21 @@ public class ViewCam extends JComponent implements View{
     //Graphics2D graph;
     Model m;
     Observable o;
-    java.util.List<Arc2D> arcs;
-    java.util.List<Rectangle2D> rects;
-    java.util.List<String> stringstoDraws;
+
+    List<Arc2D> arcs;
+    List<Rectangle2D> rects;
+    List<String> stringstoDraws;
+    List<Rectangle2D> rectShowList;
 
     JFrame frame;
-    Line2D line;
     Graphics2D graph;
+
      double X=400;
      double Y=400;
     static final double R=200;
-    //double angle;
-    Color[] colors={Color.YELLOW,Color.BLUE,Color.CYAN,Color.GREEN,Color.RED};
 
-    Arc2D arcblanc,arccentre,arcCurrent;
-    java.util.List<Rectangle2D> rectShowList;
+    Color[] colors={Color.YELLOW,Color.BLUE,Color.CYAN,Color.GREEN,Color.RED,Color.ORANGE,Color.PINK,Color.MAGENTA};
+    Arc2D arcblanc,arccentre;
 
     Button btnNext;
     Button btnPrev;
@@ -47,42 +46,37 @@ public class ViewCam extends JComponent implements View{
 
     int currentAcr=-1;
 
-    @Override
-    public void setCurrentAcrIndex(int currentAcr) {
-        this.currentAcr = currentAcr;
-    }
+    public ViewCam() {
 
-    public ViewCam(Model m) {
 
-        this.m=m;
-        this.o=(ModelImpl) m;
-        o.addObserver(this);
-        arcCurrent=null;
-        arcs=new ArrayList<Arc2D>();
-        rects=new ArrayList<Rectangle2D>();
+
+
+        arcs=new ArrayList<>();
+        rects=new ArrayList<>();
         rectShowList=new ArrayList<>();
         stringstoDraws=new ArrayList<>();
 
         frame=new JFrame();
+        frame.setBounds(0,0,800,800);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         btnNext=new Button("Next");
         btnPrev=new Button("Previous");
-        frame.setBounds(0,0,800,800);
-
         btnNext.setBounds(120,20,100,30);
         btnPrev.setBounds(10,20,100,30);
         btnNext.setEnabled(true);
         btnNext.setVisible(true);
         btnPrev.setVisible(true);
         btnPrev.setEnabled(true);
+
+
         frame.add(btnPrev);
         frame.add(btnNext);
         frame.add(this);
 
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        X=getWidth()/2;
-        Y=getHeight()/2;
+        X=frame.getWidth()/2;
+        Y=frame.getHeight()/2;
 
 
 
@@ -96,22 +90,19 @@ public class ViewCam extends JComponent implements View{
         createArcs(graph);
         drawRectList(graph);
 
+        //desiner un arc blanc
         arcblanc=new Arc2D.Double();
-
         arcblanc.setArcByCenter(X,Y,R*2/3,0,360,Arc2D.PIE);
-
         graph.setPaint(Color.WHITE);
         graph.fill(arcblanc);
 
-         arccentre=new Arc2D.Double();
-
+        //desiner un arc au centre
+        arccentre=new Arc2D.Double();
         arccentre.setArcByCenter(X,Y,R/2,0,360,Arc2D.PIE);
-
         graph.setPaint(Color.MAGENTA);
         graph.fill(arccentre);
 
-
-        //graph.fillOval(X,Y,50,20);
+        //desiner le titre, la desc et la valeur du modele.
         graph.setPaint(Color.BLACK);
         graph.setFont(new Font("Arial",Font.BOLD,20));
         String title=m.getTitre();
@@ -125,12 +116,88 @@ public class ViewCam extends JComponent implements View{
         graph.drawString(( m.getTotalValue())+" Euros",xCoordinate,yCoordinate+30);
 
         graph.setPaint(Color.BLACK);
-        //drawStrings(graph);
+
 
 
     }
 
-    private void drawStrings(Rectangle2D rect, int index) {
+    private void createArcs(Graphics2D graph){
+
+        arcs.clear();
+        Iterator<Item> iter=m.getItemsIterator();
+        //System.out.println("nb items:"+m.getNbItems());
+        double anglestart=0;
+        int indexcolor=0;
+        double anglestop=0;
+        int num=0;
+        while (iter.hasNext()){
+            Arc2D arc = new Arc2D.Double();
+            double angle= (iter.next().getValue()  * 360 / m.getTotalValue());//calcul l'angle du chaque arc
+            anglestop=anglestart+angle;
+
+            //If this arc is clicked or picked by buttons, larger..
+            if(num==this.currentAcr){
+                arc.setArcByCenter(X,Y,R+20,anglestart,angle,Arc2D.PIE);
+                arcs.add(arc);
+            }
+            else {
+                arc.setArcByCenter(X,Y,R,anglestart,angle,Arc2D.PIE);
+                arcs.add(arc);
+            }
+            num++;
+            graph.setPaint(nextcolor(indexcolor));
+            //System.out.println("indexColor "+indexcolor);
+            indexcolor++;
+            anglestart=anglestop;
+            graph.fill(arc);//draw it...
+
+            //create rect et ajouter dans la liste
+            Rectangle2D rect=createRect(arc);
+            rects.add(rect);
+
+        }
+
+    }
+
+    private Rectangle2D createRect(Arc2D arc){
+        double r=arc.getWidth()/2;
+        Rectangle2D rect=new Rectangle2D.Double();
+        double anglestart=arc.getAngleStart();
+        double angle=arc.getAngleExtent();
+        double angleRect=anglestart+angle/2;
+        //Calculer le milieu de l'arc
+        double xr=arc.getCenterX()+r*Math.cos(angleRect/180*3.14);
+        double yr=arc.getCenterY()-r*Math.sin(angleRect/180*3.14);
+
+        //transformer le rect pour la bonne position.
+        switch (transformPosition(angleRect)){
+            case 1: yr=yr-heightRect;break;
+            case 2: yr=yr-heightRect;xr=xr-widthRect;break;
+            case 3: xr=xr-widthRect;break;
+            case 4: break;
+            default:break;
+        }
+        rect.setRect(xr,yr,widthRect,heightRect);
+
+        return rect;
+
+    }
+
+    private void drawRectList(Graphics2D graph){
+        Iterator<Rectangle2D> iter=rectShowList.iterator();
+        while(iter.hasNext()){
+            Rectangle2D rect=iter.next();
+            int index=rectShowList.indexOf(rect);
+
+            drawStringsInRect(rect,index);
+            //graph.setPaint(Color.BLACK);
+            graph.draw(rect);
+
+        }
+
+    }
+
+    private void drawStringsInRect(Rectangle2D rect, int index) {
         double x=rect.getX();
         double y=rect.getY();
         graph.setPaint(Color.BLACK);
@@ -154,49 +221,7 @@ public class ViewCam extends JComponent implements View{
 
     }
 
-    private void createArcs(Graphics2D graph){
 
-        arcs.clear();
-        Iterator<Item> iter=m.getItemsIterator();
-        System.out.println("nb items:"+m.getNbItems());
-        double anglestart=0;
-        int indexcolor=0;
-        double anglestop=0;
-        int num=0;
-        while (iter.hasNext()){
-            Arc2D arc = new Arc2D.Double();
-
-            double angle= (iter.next().getValue()  * 360 / m.getTotalValue());
-
-            anglestop=anglestart+angle;
-
-            if(num==this.currentAcr){
-                arc.setArcByCenter(X,Y,R+20,anglestart,angle,Arc2D.PIE);
-                arcs.add(arc);
-            }
-            else {
-                arc.setArcByCenter(X,Y,R,anglestart,angle,Arc2D.PIE);
-                arcs.add(arc);
-            }
-            num++;
-            graph.setPaint(nextcolor(indexcolor));
-
-            System.out.println("indexColor "+indexcolor);
-            indexcolor++;
-
-
-            anglestart=anglestop;
-
-
-            graph.fill(arc);
-
-            //create rects
-            Rectangle2D rect=createRect(arc);
-            rects.add(rect);
-
-        }
-
-    }
   @Override
     public void update(Observable o, Object arg) {
 
@@ -243,12 +268,6 @@ public class ViewCam extends JComponent implements View{
     }
 
 
-
-        @Override
-    public JFrame getFrame() {
-        return this.frame;
-    }
-
     @Override
     public Arc2D getArcBlanc() {
         return this.arcblanc;
@@ -259,14 +278,6 @@ public class ViewCam extends JComponent implements View{
         return this.arccentre;
     }
 
-
-    public void setBtnNext(Button btnNext) {
-        this.btnNext = btnNext;
-    }
-
-    public void setBtnPrev(Button btnPrev) {
-        this.btnPrev = btnPrev;
-    }
 
     @Override
     public Button getBtnNext() {
@@ -284,7 +295,17 @@ public class ViewCam extends JComponent implements View{
     }
 
 
+    @Override
+    public void setCurrentAcrIndex(int currentAcr) {
+        this.currentAcr = currentAcr;
+    }
 
+    @Override
+    public void setModel(Model m) {
+        this.m=m;
+        this.o=(ModelImpl) m;
+        o.addObserver(this);
+    }
 
     public int transformPosition(double angle){
 
@@ -304,47 +325,6 @@ public class ViewCam extends JComponent implements View{
             return -1;
         }
     }
-
-    public Rectangle2D createRect(Arc2D arc){
-        double r=arc.getWidth()/2;
-        Rectangle2D rect=new Rectangle2D.Double();
-        double anglestart=arc.getAngleStart();
-        double angle=arc.getAngleExtent();
-        double angleRect=anglestart+angle/2;
-        double xr=arc.getCenterX()+r*Math.cos(angleRect/180*3.14);
-        double yr=arc.getCenterY()-r*Math.sin(angleRect/180*3.14);
-
-        switch (transformPosition(angleRect)){
-            case 1: yr=yr-heightRect;break;
-            case 2: yr=yr-heightRect;xr=xr-widthRect;break;
-            case 3: xr=xr-widthRect;break;
-            case 4: break;
-            default:break;
-        }
-        rect.setRect(xr,yr,widthRect,heightRect);
-        //graph.drawRect((int) xr, (int) yr, (int) widthRect, (int) heightRect);
-
-
-        //System.out.println(xr+" zuobiao "+yr+"   ");
-
-        return rect;
-
-    }
-
-    private void drawRectList(Graphics2D graph){
-        Iterator<Rectangle2D> iter=rectShowList.iterator();
-        while(iter.hasNext()){
-            Rectangle2D rect=iter.next();
-            int index=rectShowList.indexOf(rect);
-
-            drawStrings(rect,index);
-            //graph.setPaint(Color.BLACK);
-            graph.draw(rect);
-
-        }
-
-    }
-
 
     public List<Rectangle2D> getRectShowList() {
         return rectShowList;
