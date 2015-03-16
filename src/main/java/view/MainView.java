@@ -7,9 +7,6 @@ import model.ItemImpl;
 import model.Model;
 import model.ModelImpl;
 
-import javax.swing.*;
-import java.util.Random;
-
 /**
  * Created by naleite on 13/10/14.
  */
@@ -20,7 +17,7 @@ public class MainView {
 
 
         Model m=new ModelImpl("HELLO");
-        View viewCam=new ViewCam(m);
+        View viewCam=new ViewCam();
         Controler controler=new ControlerImpl(m,viewCam);
 
 
@@ -61,14 +58,6 @@ public class MainView {
         m.addItem(it3);
         m.addItem(it4);
         m.addItem(it5);
-
-
-
-
-
-
-
-
 
 
     }

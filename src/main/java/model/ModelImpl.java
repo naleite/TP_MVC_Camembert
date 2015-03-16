@@ -1,8 +1,9 @@
 package model;
 
-import view.View;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by naleite on 13/10/14.
@@ -20,7 +21,7 @@ public class ModelImpl extends Observable implements Model {
 
         items=new ArrayList<Item>();
 
-        currentItemIndex=0;
+        currentItemIndex=-1;
         this.titre=titre;
 
     }
