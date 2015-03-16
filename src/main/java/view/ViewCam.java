@@ -57,7 +57,7 @@ public class ViewCam extends JComponent implements View{
         stringstoDraws=new ArrayList<>();
 
         frame=new JFrame();
-        frame.setBounds(0,0,800,800);
+        frame.setBounds(0,0,900,900);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
